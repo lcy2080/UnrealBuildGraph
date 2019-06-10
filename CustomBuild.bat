@@ -1,1 +1,1 @@
-RunUAT BuildGraph -Script=%~dp0/CustomBuild1.xml -Project=%~dp0/MyTestBuild.uproject -Target="Building Project" -set:Project=%~dp0/MyTestBuild.uproject
+RunUAT BuildGraph -Script=%~dp0CustomBuild1.xml -Project=%~dp0MyTestBuild.uproject -Target="Building Project" -set:Project=%~dp0MyTestBuild.uproject

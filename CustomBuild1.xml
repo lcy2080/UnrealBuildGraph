@@ -10,7 +10,7 @@
 ===============================
 -->
 	<Agent Name="Cooking" Type="Cook">
-		<Node Name="Cook Project" Requires="#EditorForStandalone" Produces="#CookedProject">
+		<Node Name="Cook Project" Produces="#CookedProject">
 			<Cook Project="$(ProjectFile)" Platform="WindowsNoEditor" Arguments="-SkipCookingEditorContent"/>
 		</Node>
 	</Agent>
@@ -23,21 +23,21 @@
 	<Agent Name="Target Windows" Type="Windows">
 
 		<!-- Compile the basic components required to compile a project -->
-		<Node Name="Compile MyTestBuild Editor" Requires="#UHT" Produces="#ProjectEditorWin64">
-			<Compile Target="MyTestBuildEditor" Platform="Win64" Configuration="Development" Arguments="-Project=$(ProjectFile) $(BuildArguments)" Tag="#ProjectEditorFiles_Win64"/>
+		<Node Name="Compile MyTestBuild Editor" Produces="#ProjectEditorWin64">
+			<Compile Target="MyTestBuildEditor" Platform="Win64" Configuration="Development" Arguments="-Project=$(ProjectFile)" Tag="#ProjectEditorFiles_Win64"/>
 			<Log Message="The following files are part of Compile Process:" Files="#ProjectEditorFiles_Win64"/>
 		</Node>
 
 		<!--Compile game for Windows 64-->
 		<Node Name="Compile MyTestBuild Win64" Requires="#ProjectEditorWin64" Produces="#CompiledGameWin64">
-			<Compile Target="MyTestBuild" Platform="Win64" Configuration="$(BuildConfig)" Arguments="-Project=$(ProjectFile) $(BuildArguments)" Tag="#CompiledGameWin64Files"/>
+			<Compile Target="MyTestBuild" Platform="Win64" Configuration="Development" Arguments="-Project=$(ProjectFile)" Tag="#CompiledGameWin64Files"/>
 		</Node>
 
 		<!--Build game for Windows 64-->
-		<Node Name="Build Game Win64" Requires="#CompiledGameWin64;#EditorForStandalone" Produces="#GameWin64">
-		 	<Command Name="BuildCookRun" Arguments="-Project=$(ProjectFile) -SkipCookingEditorContent -noP4 -platform=Win64 -clientconfig=$(BuildConfig) -cook -stage -package -pak -archive -archivedirectory=G:/MyTestBuild/FullFeaturedBuild"/>
+		<Node Name="Build Game Win64" Requires="#CompiledGameWin64" Produces="#GameWin64">
+		 	<Command Name="BuildCookRun" Arguments="-Project=$(ProjectFile) -SkipCookingEditorContent -noP4 -platform=Win64 -clientconfig=Development -cook -stage -package -pak -archive -archivedirectory=G:/MyTestBuild/FullFeaturedBuild"/>
 		</Node>
 	</Agent>
 	
-	<Aggregate Name="Building Project" Requires="#ProjectEditorWin64;#CookedProject"/>
+	<Aggregate Name="Building Project" Requires="#GameWin64;#CookedProject"/>
 </BuildGraph>
