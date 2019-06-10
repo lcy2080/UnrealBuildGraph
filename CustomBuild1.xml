@@ -1,0 +1,23 @@
+<?xml version='1.0' ?>
+<BuildGraph xmlns="http://www.epicgames.com/BuildGraph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.epicgames.com/BuildGraph ../Schema.xsd" >
+
+	<Option Name="Project" DefaultValue="" Description="uproject path"/>
+
+	<Property Name="ProjectFile" Value="$(Project)"/>
+
+	<Agent Name="Properties Agent" Type="CompileWin64">
+
+		<!-- Compile UnrealHeaderTool -->
+		<Node Name="Compile MyTestBuild">
+			<Compile Target="MyTestBuild" Platform="Win64" Configuration="Development" Arguments="-Project=$(ProjectFile)" Tag="#UHTFiles"/>
+			<Log Message="The following files are part of BuildGraphTest:" Files="#UHTFiles"/>
+		</Node>
+
+		<Node Name="Cook MyTestBuild">
+			<Cook Project="$(ProjectFile)" Platform="WindowsNoEditor" Arguments="-iterate -cookbythebook"/>
+		</Node>
+		
+	</Agent>
+	
+	<Aggregate Name="Building Examples" Requires="Compile MyTestBuild"/>
+</BuildGraph>

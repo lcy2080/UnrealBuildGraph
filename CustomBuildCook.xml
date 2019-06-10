@@ -1,0 +1,13 @@
+<?xml version='1.0' ?>
+<BuildGraph xmlns="http://www.epicgames.com/BuildGraph" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.epicgames.com/BuildGraph ../Schema.xsd" >
+
+	<Option Name="Project" DefaultValue="" Description="uproject path"/>
+
+	<Property Name="ProjectFile" Value="$(Project)"/>
+
+	<Agent Name="BuildCook Project" Type="CompileWin64">
+		<Node Name="Custom BuildCook Project">
+			<Command Name="BuildCookRun" Arguments="-Project=$(ProjectFile) -compile -nocompileeditor -installed -nop4 -cook -stage -archive -archivedirectory=G:/MyTestBuild/GraphBuild -package -clientconfig=Development -ue4exe=&quot;G:\Epic Games\UE_4.22\Engine\Binaries\Win64\UE4Editor-Cmd.exe&quot; -pak -prereqs -nodebuginfo -targetplatform=Win64 -build -utf8output"/>
+		</Node>
+	</Agent>
+</BuildGraph>

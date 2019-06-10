@@ -1,0 +1,1 @@
+RunUAT -ScriptsForProject=%~dp0MyTestBuild.uproject BuildGraph -Script=%~dp0CustomBuildCook.xml -Project=%~dp0MyTestBuild.uproject -Target="Custom BuildCook Project" -set:Project=%~dp0MyTestBuild.uproject
