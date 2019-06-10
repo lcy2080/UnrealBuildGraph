@@ -4,20 +4,40 @@
 	<Option Name="Project" DefaultValue="" Description="uproject path"/>
 
 	<Property Name="ProjectFile" Value="$(Project)"/>
+<!--
+===============================
+				Editor Building
+===============================
+-->
+	<Agent Name="Cooking" Type="Cook">
+		<Node Name="Cook Project" Requires="#EditorForStandalone" Produces="#CookedProject">
+			<Cook Project="$(ProjectFile)" Platform="WindowsNoEditor" Arguments="-SkipCookingEditorContent"/>
+		</Node>
+	</Agent>
 
-	<Agent Name="Properties Agent" Type="CompileWin64">
+<!--
+=================================
+				Standalone Builds
+=================================
+-->
+	<Agent Name="Target Windows" Type="Windows">
 
-		<!-- Compile UnrealHeaderTool -->
-		<Node Name="Compile MyTestBuild">
-			<Compile Target="MyTestBuild" Platform="Win64" Configuration="Development" Arguments="-Project=$(ProjectFile)" Tag="#UHTFiles"/>
-			<Log Message="The following files are part of BuildGraphTest:" Files="#UHTFiles"/>
+		<!-- Compile the basic components required to compile a project -->
+		<Node Name="Compile MyTestBuild Editor" Requires="#UHT" Produces="#ProjectEditorWin64">
+			<Compile Target="MyTestBuildEditor" Platform="Win64" Configuration="Development" Arguments="-Project=$(ProjectFile) $(BuildArguments)" Tag="#ProjectEditorFiles_Win64"/>
+			<Log Message="The following files are part of Compile Process:" Files="#ProjectEditorFiles_Win64"/>
 		</Node>
 
-		<Node Name="Cook MyTestBuild">
-			<Cook Project="$(ProjectFile)" Platform="WindowsNoEditor" Arguments="-iterate -cookbythebook"/>
+		<!--Compile game for Windows 64-->
+		<Node Name="Compile MyTestBuild Win64" Requires="#ProjectEditorWin64" Produces="#CompiledGameWin64">
+			<Compile Target="MyTestBuild" Platform="Win64" Configuration="$(BuildConfig)" Arguments="-Project=$(ProjectFile) $(BuildArguments)" Tag="#CompiledGameWin64Files"/>
 		</Node>
-		
+
+		<!--Build game for Windows 64-->
+		<Node Name="Build Game Win64" Requires="#CompiledGameWin64;#EditorForStandalone" Produces="#GameWin64">
+		 	<Command Name="BuildCookRun" Arguments="-Project=$(ProjectFile) -SkipCookingEditorContent -noP4 -platform=Win64 -clientconfig=$(BuildConfig) -cook -stage -package -pak -archive -archivedirectory=G:/MyTestBuild/FullFeaturedBuild"/>
+		</Node>
 	</Agent>
 	
-	<Aggregate Name="Building Examples" Requires="Compile MyTestBuild"/>
+	<Aggregate Name="Building Project" Requires="#ProjectEditorWin64;#CookedProject"/>
 </BuildGraph>
